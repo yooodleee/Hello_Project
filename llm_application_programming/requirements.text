@@ -1,0 +1,4 @@
+python==3.10
+lamaindex==0.6.12
+langchain==0.0.181
+openapi==0.28
