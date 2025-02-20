@@ -29,4 +29,20 @@ class OptimizedInstructorTransformer(InstructorEmbedding.INSTRUCTOR_Transformer)
         super().__init__(*args, **kwargs)
     
 
+    def _load_model(
+            self,
+            model_name_or_path,
+            config,
+            cache_dir,
+            **model_args,
+    ):
+        """Loads the transformer model."""
+        self.auto_model = OptimizedTransformer.from_pretrained(
+            model_name_or_path, config=config, cache_dir=cache_dir, **model_args
+        )
+
+        if isinstance(self.auto_model, torch.jit.ScriptModule):
+            setattr(self.auto_model, "config", config)
+    
+
     
