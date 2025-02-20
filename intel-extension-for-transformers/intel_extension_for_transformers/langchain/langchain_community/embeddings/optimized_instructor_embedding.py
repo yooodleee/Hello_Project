@@ -20,3 +20,13 @@ sentence_transformers = LazyImport("sentence_transformers")
 InstructorEmbedding = LazyImport("InstructorEmbedding")
 
 logger = logging.getLogger(__name__)
+
+
+
+class OptimizedInstructorTransformer(InstructorEmbedding.INSTRUCTOR_Transformer):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+
+    
