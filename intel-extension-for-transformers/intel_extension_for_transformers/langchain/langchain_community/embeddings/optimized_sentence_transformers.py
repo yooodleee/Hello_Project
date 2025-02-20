@@ -83,3 +83,11 @@ class OptimizedTransformer(sentence_transformers.models.Transformer):
 
 
 
+class OptimizedSentenceTransformer(sentence_transformers.SentenceTransformer):
+
+    def __init__(self, *args, **kwargs):
+        self._jit_model = False
+        super().__init__(*args, **kwargs)
+    
+
+    
