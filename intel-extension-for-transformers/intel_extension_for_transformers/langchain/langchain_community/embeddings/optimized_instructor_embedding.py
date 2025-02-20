@@ -95,3 +95,11 @@ class OptimizedInstructorTransformer(InstructorEmbedding.INSTRUCTOR_Transformer)
 
 
 
+class OptimizedInstructor(InstructorEmbedding.INSTRUCTOR):
+
+    def __init__(self, *args, **kwargs):
+        self._jit_model = False
+        super().__init__(*args, **kwargs)
+    
+
+    
