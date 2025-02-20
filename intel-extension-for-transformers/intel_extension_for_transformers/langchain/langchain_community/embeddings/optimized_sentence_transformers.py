@@ -251,3 +251,17 @@ class OptimizedSentenceTransformer(sentence_transformers.SentenceTransformer):
         
 
         return modules
+    
+
+    def encode(
+            self,
+            sentences,
+            device=None,
+            *args,
+            **kwargs,
+    ):
+        if self._jit_model and device is None:
+            # set default device to 'cpu' for jit model, otherwise may fail when getting device
+            return super().encode(sentences, device='cpu', *args, **kwargs)
+        else:
+            return super().encode(sentences, device=device, *args, **kwargs)
