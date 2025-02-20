@@ -135,3 +135,64 @@ class HuggingFaceEmbeddings(
 
 
 
+class HuggingFaceBgeEmbeddings(
+    langchain_core.pydantic_v1.BaseModel, langchain_core.embeddings.Embeddings
+):
+    """
+    HuggingFace BGE sentence_transformers embeddings models.
+    
+    To use, should have the ``sentence_transformers`` python package installed.
+
+
+    Example:
+        .. code-block: python
+
+            from intel_extension_for_transformers.langchain_community.embeddings import HuggingFaceBgeEmbeddings
+
+            model_name = "BAAI/bge-large-en"
+            model_kwargs = {'device': 'cpu'}
+            encode_kwargs = {'normalize_embeddings': True}
+            hf = HuggingFaceBgeEmbeddings(
+                model_name=model_name,
+                model_kwargs=model_kwargs,
+                encode_kwargs=encode_kwargs,
+            )
+    """
+
+    client: Any # : : meta private:
+    model_name: str = DEFAULT_BGE_MODEL
+    """Model name to use."""
+    cache_folder: Optional[str] = None
+    """
+    Path to store models.
+    
+    Can be also set by SENTENCE_TRANSFORMERS_HOME env variable.
+    """
+    model_kwargs: Dict[str, Any] = langchain_core.pydantic_v1.Field(default_factory=dict)
+    """Keyword args to pass to the model."""
+    encode_kwargs: Dict[str, Any] = langchain_core.pydantic_v1.Field(default_factory=dict)
+    """Keyword args to pas when calling the `encode` method of the model."""
+    query_instruction: str = DEFAULT_QUERY_BGE_INSTRUCTION_EN
+    """Instruction to use for embedding query."""
+
+
+    def __init__(self, **kwargs: Any):
+        """Initialize the sentence_transformer."""
+        super().__init__(**kwargs)
+
+
+        # Check sentence_transformers python package
+        if importlib.util.find_spec("sentence_transformers") is None:
+            raise ImportError(
+                "Could not import sentece_transformers python package. "
+                "Please install it with `pip install -U sentence-transformers`."
+            )
+        
+        self.client = OptimizedSentenceTransformer(
+            self.model_name, cache_folder=self.cache_folder, **self.model_kwargs
+        )
+        if "-zh" in self.model_name:
+            self.query_instruction = DEFAULT_QUERY_BGE_INSTRUCTION_ZH
+    
+
+    
