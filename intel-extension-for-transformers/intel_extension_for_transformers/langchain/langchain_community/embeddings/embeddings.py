@@ -195,4 +195,10 @@ class HuggingFaceBgeEmbeddings(
             self.query_instruction = DEFAULT_QUERY_BGE_INSTRUCTION_ZH
     
 
+    class config:
+        """Configuration for this pydantic obj."""
+
+        extra = langchain_core.pydantic_v1.Extra.forbid
+    
+
     
