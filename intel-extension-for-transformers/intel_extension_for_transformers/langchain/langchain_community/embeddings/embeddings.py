@@ -219,4 +219,25 @@ class HuggingFaceBgeEmbeddings(
         return embeddings.tolist()
     
 
-    
+    def embed_query(self, text: str) -> List[float]:
+        """Compute query embeddings using a HuggigFace transformer model.
+        
+        
+        Args
+        ---------------
+            text: The text to embed.
+            
+            
+        Returns
+        ----------------
+            Embeddings for the text.
+        """
+        text = text.replace("\n", " ")
+        embedding = self.client.encode(
+            self.query_instruction + text, **self.encode_kwargs
+        )
+
+        return embedding.tolist()
+
+
+
