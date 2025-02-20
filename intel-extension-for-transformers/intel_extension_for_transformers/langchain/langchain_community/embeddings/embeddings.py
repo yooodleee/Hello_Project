@@ -84,4 +84,9 @@ class HuggingFaceEmbeddings(
         )
     
 
+    class config:
+        """Configuration for this pydantic obj."""
+
+        extra = langchain_core.pydantic_v1.Extra.forbid
+    
     
