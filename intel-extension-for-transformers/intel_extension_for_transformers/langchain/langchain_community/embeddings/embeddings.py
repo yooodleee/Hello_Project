@@ -308,4 +308,30 @@ class HuggingFaceInstructEmbeddings(
         )
     
 
+    class Config:
+        """Configuration for this pydantic obj."""
+
+        extra = langchain_core.pydantic_v1.Extra.forbid
+
+    
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """
+        Compute doc embeddings using a HuggingFace instruct model.
+
+
+        Args
+        --------------
+            texts: The list of texts to embed.
+
+
+        Returns
+        ---------------
+            List of embeddings, one for each text.
+        """
+        instruct_pairs = [[self.embed_instruction, text] for text in texts]
+        embeddings = self.client.encode(instruct_pairs, **self.encode_kwargs)
+
+        return embeddings.tolist()
+    
+
     
