@@ -90,4 +90,33 @@ class OptimizedSentenceTransformer(sentence_transformers.SentenceTransformer):
         super().__init__(*args, **kwargs)
     
 
+    def _load_auto_model(
+            self,
+            model_name_or_path: str,
+            token: Optional[Union[bool, str]],
+            cache_folder: Optional[str],
+            revision: Optional[str] = None,
+            trust_remote_code: bool = False,
+    ):
+        """Creates a simple Transformer + Mean Pooling model and returns the modules."""
+        logger.warning(
+            "No sentence-transformers model found with name {}." \
+            "Creating a new one with MEAN pooling.".format(model_name_or_path)
+        )
+        transformer_model = OptimizedTransformer(
+            model_name_or_path,
+            cache_dir=cache_folder,
+            model_args={"token": token, "trust_remote_code": trust_remote_code, "revision": revision},
+            tokenizer_args={"token": token, "trust_remote_code": trust_remote_code, "reivision": revision},
+        )
+
+        if isinstance(transformer_model.auto_model, torch.jit.ScriptModule):
+            self._jit_model = True
+        pooling_model = sentence_transformers.models.Pooling(
+            transformer_model.get_word_embedding_dimension(), 'mean'
+        )
+
+        return [transformer_model, pooling_model]
+    
+
     
