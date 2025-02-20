@@ -201,4 +201,22 @@ class HuggingFaceBgeEmbeddings(
         extra = langchain_core.pydantic_v1.Extra.forbid
     
 
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """Compute doc embeddings using a HuggingFace transformer model.
+        
+        
+        Args
+        --------------
+            texts: The list of texts to embed.
+            
+        Returns
+        ---------------
+            List of embeddings, one for each text.
+        """
+        texts = [t.replace("\n", " ") for t in texts]
+        embeddings = self.client.encode(texts, **self.encode_kwargs)
+
+        return embeddings.tolist()
+    
+
     
