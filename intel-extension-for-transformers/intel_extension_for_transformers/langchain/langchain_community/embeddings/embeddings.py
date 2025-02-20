@@ -334,4 +334,20 @@ class HuggingFaceInstructEmbeddings(
         return embeddings.tolist()
     
 
-    
+    def embed_query(self, text: str) -> List[float]:
+        """
+        Compute query embeddings using a HuggingFace instruct model.
+
+
+        Args
+        ----------------
+            text: The text to embed.
+
+        Returns
+        ---------------
+            Embeddings for the text.
+        """
+        instruction_pair = [self.query_instruction, text]
+        embedding = self.client.encode([instruction_pair], **self.encode_kwargs)[0]
+
+        return embedding.tolist()
