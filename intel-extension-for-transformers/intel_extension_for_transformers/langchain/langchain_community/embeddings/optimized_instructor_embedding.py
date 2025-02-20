@@ -272,4 +272,15 @@ class OptimizedInstructor(InstructorEmbedding.INSTRUCTOR):
         return modules
     
 
-    
+    def encode(
+            self,
+            sentences,
+            device=None,
+            *args,
+            **kwargs,
+    ):
+        if self._jit_model and device is None:
+            # set default device to 'cpu' jit model, otherwise may fail when getteing device
+            return super().encode(sentences, device='cpu', *args, **kwargs)
+        else:
+            return super().encode(sentences, device=device, *args, **kwargs)
