@@ -1,0 +1,31 @@
+{% set version = "1.3.1" %}
+{% set buildnumber = 0 %}
+package:
+  name: intel_extension_for_transformers
+  version: {{version}}
+build:
+  script_env:
+    - IMEX_WHL
+  number: {{buildnumber}}
+  script: pip install --no-deps {{IMEX_WHL}}
+requirements:
+  build:
+    - python
+    - pip
+  run:
+    - python
+    - pip
+    - numpy
+    - transformers
+    - packaging
+    - neural-compressor
+    - protobuf
+  test:
+    imports:
+      - intel_extension_for_transformers
+  about:
+    home: https://github.com/yooodleee/personal-study/intel_extension_for_transformers
+    license:
+    license_family: 
+    license_file:
+    description: 
