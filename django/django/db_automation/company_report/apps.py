@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RedisCacheConfig(AppConfig):
+class CompanyReportConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "redis_cache"
+    name = "company_report"
