@@ -1,9 +1,9 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 
 from account.entity.account import Account
+from account.entity.account_login_type import AccountLoginType
 from account.entity.account_role_type import AccountRoleType
-from account.entity.role_type import RoleType
 from account.repository.account_repository import AccountRepository
 
 
@@ -27,36 +27,43 @@ class AccountRepositoryImpl(AccountRepository):
         return cls.__instance
     
 
-    def save(self, email):
-        print(f"email: {email}")
-        defaultRoleType = AccountRoleType.objects.filter(role_type=RoleType.NORMAL).first()
+    def create(self, loginType, roleType):
+        loginTypeEntity = AccountLoginType.objects.get_or_create(loginType=loginType)
+        roleTypeEntity = AccountRoleType.objects.get_or_create(roleType=roleType)
+        loginType = loginTypeEntity[0]
+        roleType = roleTypeEntity[0]
 
-        # 만약 기본 역할이 없다면, 새로 생성
-        if not defaultRoleType:
-            defaultRoleType = AccountRoleType(role_type=RoleType.NORMAL)
-            defaultRoleType.save()
-            print(f"Created new defaultRoleType: {defaultRoleType}")
-        else:
-            print(f"Found existing defaultRoleType: {defaultRoleType}")
-        
-        print(f"defaultRoleType: {defaultRoleType}")
-
-        account = Account(email=email, role_type=defaultRoleType)
-        print(f"account: {account}")
-
-        account.save()
+        account = Account.objects.create(loginType=loginType, roleType=roleType)
         return account
     
 
     def findById(self, accountId):
-        try:
-            return Account.objects.get(id=accountId)
-        except ObjectDoesNotExist:
-            raise ObjectDoesNotExist(f"Account ID {accountId} 존재하지 않음.")
+        account = Account.objects.get(id=accountId)
+        return account
     
 
-    def findByEmail(self, email):
+    # 접속시간 기록을 위한 추가
+    def updateLastLogin(self, profile):
         try:
-            return Account.objects.get(email=email)
-        except ObjectDoesNotExist:
-            raise ObjectDoesNotExist(f"Account {email} 존재하지 않음.")
+            profile.last_login = timezone.now() + timezone.timedelta(hours=9)
+            profile.save()
+        except Exception as e:
+            profile(f"최근 접속시간 업데이트 중 에러 발생: {e}")
+            return None
+    
+
+    def withdrawAccount(self, account, withdrawReason):
+        role_type = AccountRoleType.objects.get(id=account.roleType_id)
+
+        if role_type.roleType == "NORMAL":
+            role_type.roleType = "BLACKLIST"
+            role_type.save()
+
+            account.roleType = role_type
+            account.withdraw_reason = withdrawReason
+            account.withdraw_at = timezone.now()
+            account.save()
+            
+            print('계정 탈퇴 완료')
+        else:
+            raise ValueError('이미 탈퇴된 계정입니다.')

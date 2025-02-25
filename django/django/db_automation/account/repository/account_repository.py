@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 
 
+
 class AccountRepository(ABC):
 
     @abstractmethod
-    def save(self, email):
+    def create(self, loginType, roleType):
         pass
 
 
@@ -14,5 +15,10 @@ class AccountRepository(ABC):
 
 
     @abstractmethod
-    def findByEmail(self, email):
+    def updateLastLogin(self, profile):
+        pass
+
+
+    @abstractmethod
+    def withdrawAccount(self, account, withdrawReason):
         pass

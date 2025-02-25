@@ -1,7 +1,7 @@
-from django.core.exceptions import ObjectDoesNotExist
-
 from account.repository.account_repository_impl import AccountRepositoryImpl
+from account.repository.profile_repository_impl import ProfileRepositoryImpl
 from account.service.account_service import AccountService
+
 
 
 class AccountServiceImpl(AccountService):
@@ -10,10 +10,10 @@ class AccountServiceImpl(AccountService):
 
     def __new__(cls):
         if cls.__instance is None:
-            cls.__instance = super().__init__(cls)
-
+            cls.__instance = super().__new__(cls)
+            cls.__instance.__profileRepository = ProfileRepositoryImpl.getInstance()
             cls.__instance.__accountRepository = AccountRepositoryImpl.getInstance()
-        
+
         return cls.__instance
     
 
@@ -25,22 +25,56 @@ class AccountServiceImpl(AccountService):
         return cls.__instance
     
 
-    def createAccount(self, email):
-        return self.__accountRepository.save(email)
-    
-
     def checkEmailDuplication(self, email):
-        try:
-            return self.__accountRepository.findByEmail(email)
-        except ObjectDoesNotExist:
-            return None
+        profile = self.__profileRepository.findByEmali(email)
+        return profile is not None
     
 
-    def findEmail(self, accountId):
+    def checkNicknameDuplication(self, nickname):
+        profile = self.__profileRepository.findByNickname(nickname)
+        return profile is not None
+    
+
+    def registerAccount(self, loginType, roleType, nickname, email, password, salt, gender, birthyear):
+        account = self.__accountRepository.create(loginType, roleType)
+        return self.__profileRepository.create(
+            nickname, email, password, salt, gender, birthyear, account
+        )
+    
+
+    def findAccountByEmail(self, email):
+        profile = self.__profileRepository.findByEmail(email)
+        if profile:
+            self.__profileRepository.updateLastLogin(profile)
+            self.__profileRepository.update_login_history(profile)
+        
+        return profile
+    
+
+    def findAccountById(self, accountId):
+        return self.__accountRepository.findById(accountId)
+    
+
+    def checkPasswordDuplication(self, email, password):
+        account = self.__profileRepository.findByPassword(email, password)
+        return account
+    
+
+    def withdrawAccount(self, accountId, withdrawReason):
+        account = self.__accountRepository.findById(accountId)
         try:
-            account = self.__accountRepository.findById(accountId)
-            if account:
-                return account.getEmain()
-            return None
-        except ObjectDoesNotExist:
-            return None
+            self.__accountRepository.withdrawAccount(account, withdrawReason)
+            return True
+        except Exception as e:
+            print(f"withdraw_account error: {e}")
+            return False
+    
+
+    def findRoleTypeByEmail(self, email):
+        RoleType = self.__profileRepository.findByRoleType(email)
+        return RoleType
+    
+
+    def findProfileByEmail(self, email):
+        profile = self.__profileRepository.findByEmail(email)
+        return profile
