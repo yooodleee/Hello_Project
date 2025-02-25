@@ -17,10 +17,22 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("account/", include('account.urls')),
-    path("account-profile/", include('account_profile.urls')),
-    path("authentication/", include('authentication.urls')),
+    path('admin/', admin.site.urls),
+    path('kakao_oauth/', include('kakao_oauth.urls')),
+    path('account/', include('account.urls')),
+    path('survey/', include('survey.urls')),
+    path('google_oauth/', include('google_oauth.urls')),
+    path('naver_oauth/', include('naver_oauth.urls')),
+    path('company_report/',include('company_report.urls')),
+    path('cart/',include('cart.urls')),
+    path('orders/',include('orders.urls')),
+    path('marketing/',include('marketing.urls')),
+    path('management/',include('management.urls')),
+    path('interview/', include('interview.urls')),
+    path('interview_result/', include('interview_result.urls'))
 ]
