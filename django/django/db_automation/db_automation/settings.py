@@ -174,7 +174,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'AIM_Sniper_backend.wsgi.application'
+WSGI_APPLICATION = 'db_automation.wsgi.application'
 
 # redis 사용시 주석 해제
 # REDIS_HOST = os.getenv('REDIS_HOST')

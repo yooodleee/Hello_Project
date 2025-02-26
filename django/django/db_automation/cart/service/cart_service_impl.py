@@ -2,7 +2,7 @@ from account.repository.account_repository_impl import AccountRepositoryImpl
 from cart.repository.cart_item_repository_impl import CartItemRepositoryImpl
 from cart.repository.cart_repository_impl import CartRepositoryImpl
 from cart.service.cart_service import CartService
-from company_report.repository.companyReport_repository_impl import CompanyReportRepositoryImpl
+from company_report.repository.company_report_repository_impl import CompanyReportRepositoryImpl
 
 
 
