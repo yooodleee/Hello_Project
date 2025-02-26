@@ -4,12 +4,12 @@ from rest_framework import viewsets, status
 
 
 from account.service.account_service_impl import AccountServiceImpl
-from db_automation.redis_service.service.redis_service_impl import RedisCacheServiceImpl
+from db_automation.redis_service.service.redis_service_impl import RedisServiceImpl
 
 
 class AccountController(viewsets.ViewSet):
     __accountService = AccountServiceImpl.getInstance()
-    redisCacheService = RedisCacheServiceImpl.getInstance()
+    redisCacheService = RedisServiceImpl.getInstance()
 
     def requestEmail(self, request):
         postRequest = request.data

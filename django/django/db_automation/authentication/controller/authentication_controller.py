@@ -3,12 +3,12 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 
 
-from db_automation.redis_service.service.redis_service_impl import RedisCacheServiceImpl
+from db_automation.redis_service.service.redis_service_impl import RedisServiceImpl
 
 
 
 class AuthenticationController(viewsets.ViewSet):
-    redisCacheService = RedisCacheServiceImpl.getInstance()
+    redisCacheService = RedisServiceImpl.getInstance()
 
 
     def requestLogout(self, request):
