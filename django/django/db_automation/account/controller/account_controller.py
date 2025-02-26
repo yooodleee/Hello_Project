@@ -4,7 +4,7 @@ from rest_framework import viewsets, status
 
 
 from account.service.account_service_impl import AccountServiceImpl
-from redis_cache.service.redis_cache_service_impl import RedisCacheServiceImpl
+from db_automation.redis_service.service.redis_service_impl import RedisCacheServiceImpl
 
 
 class AccountController(viewsets.ViewSet):

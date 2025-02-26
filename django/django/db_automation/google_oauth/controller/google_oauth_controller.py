@@ -9,7 +9,7 @@ from account.service.account_service_impl import AccountServiceImpl
 from google_oauth.serializers.google_oauth_access_token_serializer import GoogleOauthAccessTokenSerializer
 from google_oauth.serializers.google_oauth_url_serializer import GoogleOauthUrlSerializer
 from google_oauth.service.google_oauth_service_impl import GoogleOauthServiceImpl
-from redis_cache.service.redis_cache_service_impl import RedisServiceImpl
+from db_automation.redis_service.service.redis_service_impl import RedisServiceImpl
 
 
 
